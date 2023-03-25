@@ -35,6 +35,13 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+          
+      - run:
+          name: Get pg_dump from S3
+          command: |
+            BUCKET=s3://s3-postgres-sql-backup
+            OBJECT="$(aws s3 ls $BUCKET --recursive | sort | tail -n 1 | awk '{print $4}')"
+            aws s3 cp $BUCKET/$OBJECT staging.dump 
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
